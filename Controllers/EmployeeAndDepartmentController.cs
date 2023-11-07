@@ -21,7 +21,7 @@ namespace EEmployeeManagementApi.Controllers
         [HttpPost]
         [Route("AddEmployeeAndDepartment")]
      
-        [Authorize(Roles = "Reader")]
+        //[Authorize(Roles = "Reader")]
         public async Task<IActionResult> AddEmployeeAndDepartment([FromBody] EmployeeDto employee)
         {
             var response=new ResponseDto();
@@ -40,13 +40,21 @@ namespace EEmployeeManagementApi.Controllers
             {
                 Name = departmentDto.Name
             };
-            var departmentResponse = await services.AddDepartment(departmentModel, response);
-            
 
-            await services.AddEmployeeDepartmentAssociation(response);
+            if(await services.CheckDepartmentExisted(departmentModel.Name, response))
+            {
+                await services.AddEmployeeDepartmentAssociation(response);
+            }
+            else
+            {
+                var departmentResponse = await services.AddDepartment(departmentModel, response);
 
 
-            return Ok(new { Employee = employeeResponse, Department = departmentResponse });
+                await services.AddEmployeeDepartmentAssociation(response);
+            }
+
+
+            return Ok(new { Employee = employeeResponse, /*Department = departmentResponse*/ });
         }
         [HttpDelete]
         [Route("DeleteEmployees")]
@@ -73,6 +81,8 @@ namespace EEmployeeManagementApi.Controllers
 
 
         }
+
+        
 
 
     }

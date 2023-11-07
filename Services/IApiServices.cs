@@ -14,5 +14,6 @@ namespace EmployeeManagementApi.Services
         Task<Department> DeleteDepartment(Guid id);
 
         Task<EmployeeDepartmentAssociation> AddEmployeeDepartmentAssociation(ResponseDto response);
+        Task<bool> CheckDepartmentExisted(string Name, ResponseDto response);
     }
 }

@@ -105,5 +105,19 @@ namespace EmployeeManagementApi.Services {
             await db.SaveChangesAsync();
             return existing;
         }
+        public async Task<bool> CheckDepartmentExisted(string Name, ResponseDto response)
+        {
+            var existed= await db.Departments.FirstOrDefaultAsync(x =>x.Name == Name);
+            if (existed != null)
+            {
+                response.DepartmentId = existed.Id;
+                response.DepartmentName = existed.Name;
+                return true;
+            }
+            
+            return false;
+            
+            
+        }
     }
 }
